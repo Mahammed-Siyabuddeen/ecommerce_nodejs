@@ -12,11 +12,7 @@ import { error, log } from 'console';
 import { body, validationResult } from 'express-validator';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import cors from 'cors'
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_NAME || 'dn1atq3py',
-  api_key: process.env.API_KEY || '894666243728637',
-  api_secret: process.env.API_SECRET || 'exqN0AJMiNDqKeS705J4EDdF2AY'
-})
+
 cloudinary.api.ping((error, result) => {
   if (error) {
     console.error('Error configuring Cloudinary:', error);
