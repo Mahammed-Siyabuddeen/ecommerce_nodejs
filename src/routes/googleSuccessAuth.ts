@@ -7,7 +7,7 @@ const router = Router()
 
 router.post('/', async (req: Request, res: Response) => {
     try {
-        console.log('helo');
+        console.log('helo',req.body);
 
         const { clientId, credential } = req.body
         const client = new OAuth2Client()
@@ -19,16 +19,21 @@ router.post('/', async (req: Request, res: Response) => {
         const { email, name, given_name, family_name } = payload
 
         const customerAlreadyExsist = await CustomerModel.find({ email })
+        console.log(customerAlreadyExsist);
+        
         if (!customerAlreadyExsist) {
-            const db = new CustomerModel({
+            const db = await CustomerModel.create({
                 first_name: name,
                 last_name: family_name || given_name,
                 email,
                 auth_type: 'google'
             })
-            await db.save();
+            return res.status(201).json({_id:db._id,first_name:name,last_name:family_name || given_name,email,token:credential})
         }
-        res.status(201).send("succesfull created")
+
+        return res.status(201).json({_id:customerAlreadyExsist[0]._id,first_name:name,last_name:family_name || given_name,email,token:credential})
+
+
     } catch (error) {
         console.log(error);
 
