@@ -15,6 +15,7 @@ interface Ibody {
     mrp: number
     category_id: mongoose.Types.ObjectId,
     stock_quantity: number,
+    brand:string,
 }
 const storage =new CloudinaryStorage({
     cloudinary:cloudinary,
@@ -25,22 +26,27 @@ const AddProduct = async (req: Request, res: Response) => {
 
     try {
         if(!req.files) throw new Error('file multer error');
-        // console.log(req.files)
+        console.log(req.body)
         const uploadedResult=await uploadOnCloudinary(req.files)
         console.log(uploadedResult);
         
-        const { name, description, price, mrp, category_id, stock_quantity } = req.body
+        const { name, description, price, mrp, category_id, stock_quantity,sizes,brand } = req.body
+        console.log('size',JSON.parse(sizes));
+        
         const db =  new productModel({
             name,
             description,
-            price,
-            mrp,
+            price:Number(price),
+            mrp:Number(mrp),
             category_id,
-            stock_quantity,
-            imagesUrl: uploadedResult.map(file=>file.url)
+            stock_quantity:Number(stock_quantity),
+            imagesUrl: uploadedResult.map(file=>file.secure_url),
+            sizes:JSON.parse(sizes),
+            brand
         })
         
-        db.save()
+        db.save();
+        res.status(201).send("successfully created");
         
     } catch (error: unknown) {
         if (error instanceof Error)

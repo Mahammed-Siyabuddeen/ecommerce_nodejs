@@ -13,11 +13,13 @@ interface BodyData{
 }
 export const Signup=async (req: Request, res: Response) => {
     const errors = validationResult(req);
-
+    
     if (!errors.isEmpty())
         return res.status(400).json({ errors: errors.array() });
     try {
         const { first_name, last_name, phone_number, email, password }:BodyData = req.body
+        const customerAlreadyExsist = await CustomerModel.find({ email })
+        if(customerAlreadyExsist) return res.status(400).send("user already exists with this email");
 
         const salt = await bcrypt.genSalt(10)
         const hash = await bcrypt.hash(password, salt)
