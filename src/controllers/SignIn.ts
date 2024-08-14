@@ -17,19 +17,19 @@ const SignIn = async (req: Request, res: Response) => {
     try {
         const { email, password }: Idata = req.body
         const user = await CustomerModel.findOne({ email })
-        if (!user) throw res.status(401).send({ error: 'this email is not found' })
-        if(!user.password) return res.status(401).send('login trough google')
+        if (!user) throw new Error('this email is not found' )
+        if(!user.password) throw new Error('login trough google')
         
-        const isCorrect = bcrypt.compare(password, user.password)
-        if (!isCorrect) throw res.status(401).send({ error: 'password is incorrect' })
+        const isCorrect =await bcrypt.compare(password, user.password)
+        if (!isCorrect) throw new Error('password is incorrect' )
 
-        const token = jwt.sign({ email, _id: user._id }, 'shihab', { expiresIn: '1hr' })
-        res.status(200).json({ _id: user._id, first_name: user.first_name, email: user.email, password: null, token })
+        const token = jwt.sign({ email, user_id: user._id }, process.env.JWT_SCRECET_KEY as string, { expiresIn: '1hr' })
+        res.status(200).cookie('token',token,{ httpOnly: true }).json({ _id: user._id, first_name: user.first_name, email: user.email, password: null, token })
 
     } catch (error: unknown) {
         if (error instanceof Error)
-            return res.status(400).send(error.message)
-        res.status(400).send(error)
+            return res.status(400).json({message:error.message})
+        res.status(400).json({message:'please try again'})
     }
 
 }
