@@ -1,10 +1,11 @@
-import { Router } from "express";
+import { Router} from "express";
 import addCartItem from "../controllers/addCartItem.controller";
 import { body } from "express-validator";
 import getCartProducts from "../controllers/getCartProducts.controller";
 import changeCartQuantity from "../controllers/changeCartQuantity.controller";
+import authMiddleware from "../middleware/auth.middleware";
 
-const router=Router()
+const router=Router();
 
 const validationRule=[
     body('user_id').notEmpty().withMessage('user id required'),
