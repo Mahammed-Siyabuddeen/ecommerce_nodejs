@@ -12,6 +12,10 @@ import { v2 as cloudinary } from 'cloudinary'
 import cors from 'cors'
 import { cloudinaryconfig } from './utils/cloudinaryConfig'
 import paymentRouter from './routes/payment.router'
+import { cartItemModel } from './models/cartItem.model'
+import { orderModel } from './models/order.model'
+import { orderItemsModel } from './models/orderItems.model'
+import authMiddleware from './middleware/auth.middleware'
 
 
 const port: number = 9000
@@ -20,7 +24,7 @@ const port: number = 9000
 env.config()
 const app = express();
 app.use(express.json())
-app.use(cors())
+app.use()
 cloudinaryconfig
 
 cloudinary.api.ping((error, result) => {
@@ -39,9 +43,18 @@ app.use('/signup', signup)
 app.use('/login', login)
 app.use('/product', product)
 app.use('/google-auth', googleSuccessAth)
-app.use('/cart', cart)
+app.use('/cart',cart)
 app.use('/order', order)
 app.use('/payment', paymentRouter)
+
+
+app.get('/test/:id/:my', async (req: Request, res: Response) => {
+  const { user_id, cart_id, amount } = req.body;
+  console.log('erri',req.params);
+  
+
+})
+
 
 
 const storage = multer.diskStorage({
