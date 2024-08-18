@@ -5,15 +5,16 @@ export const getClientSecret = async (req: Request, res: Response) => {
     try {
        
         const stripe = new Stripe('sk_test_51PlwiKGBMIgRPdYIW7uCxvuoPgPv8hDDe6fRr4s3d95Sj3AzQglp6MU7UPXcYwTcwztlsQ42JuVrT395neBKpMa500pciZTsna')
-        const { amount, cart_id, user_id,name, street,city,zipcode,state,country,phone } = req.body;
+        const { amount, cart_id,cartItem_id, user_id,name, street,city,zipcode,state,country,phone } = req.body;
         console.log(req.body);
         const paymentIntents = await stripe.paymentIntents.create({
             amount: amount,
             currency: 'usd',
             automatic_payment_methods: { enabled: true },
             metadata: {
-                user_id: user_id,
-                cart_id: cart_id,
+                 user_id,
+                 cart_id,
+                cartItem_id,
                 amount: amount,
                 name,
                 street,

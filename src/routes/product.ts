@@ -10,6 +10,7 @@ import addCategory from "../controllers/addCategory.controller";
 import getCategory from "../controllers/getCategory.controller";
 import getCategoryWithCount from "../controllers/getCategoryWithCount.controller";
 import { getProduct } from "../controllers/getProduct.controller";
+import { getallProductDetails } from "../controllers/getAllProuductDetails.controller";
 
 
 const router=Router()
@@ -27,9 +28,10 @@ const validatorRule=[
 ]
 router.post('/addproduct',ProductUpload.array('file',4),AddProduct);
 router.get('/getproducts',getproducts)
-router.get('/getproduct/:id',getProduct)
 router.post('/addcategory',addCategory)
 router.get('/getcategory',getCategory)
 router.get('/getcategorywithcount',getCategoryWithCount)
+router.get('/admin/getallproductdetails',getallProductDetails,)
+router.get('/getproduct/:id',getProduct)
 
 export default router

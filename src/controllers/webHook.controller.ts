@@ -6,6 +6,7 @@ import { productModel } from "../models/Product";
 import mongoose from "mongoose";
 import { orderItemsModel } from "../models/orderItems.model";
 import { addressModel } from "../models/address.model";
+import { paymentModel } from "../models/payment.model";
 
 export const webHook = async (req: Request, res: Response) => {
   console.log('webhook comming');
@@ -18,11 +19,12 @@ export const webHook = async (req: Request, res: Response) => {
       const paymentIntent = req.body.data.object;
       // console.log();
 
-      console.log('PaymentIntent was successful!',);
+      console.log('PaymentIntent was successful!',paymentIntent.metadata);
       // Fulfill the purchase, e.g., update the order in your database
 
       try {
-        const { user_id, cart_id, name, street, city, state, country, zipcode, phone } = paymentIntent.metadata;
+        const { user_id, cart_id,cartItem_id, name, street, city, state, country, zipcode, phone } = paymentIntent.metadata;
+
         const addressData = await addressModel.create({
           name,
           street,
@@ -33,10 +35,22 @@ export const webHook = async (req: Request, res: Response) => {
           phone,
           user_id: new mongoose.Types.ObjectId(user_id)
         })
-        const orderData = orderModel.create({ user_id, total_amount: paymentIntent.amount, address_id: addressData._id });
-        const data = cartItemModel.aggregate([
+
+        const paymentData = await paymentModel.create({
+          transaction_id: req.body.id,
+          amount: paymentIntent.amount,
+        })
+
+        let conditionMatch:{_id?:mongoose.Types.ObjectId,cart_id?:mongoose.Types.ObjectId}={};
+        if(cartItem_id){
+          conditionMatch._id=new mongoose.Types.ObjectId(cartItem_id)
+        }else{
+          conditionMatch.cart_id=new mongoose.Types.ObjectId(cart_id)
+
+        }
+        const cartData =await cartItemModel.aggregate([
           {
-            $match: { cart_id: new mongoose.Types.ObjectId(cart_id) },
+            $match: conditionMatch,
           },
           {
             $lookup: {
@@ -54,20 +68,38 @@ export const webHook = async (req: Request, res: Response) => {
               _id: 0,
               product_id: 1,
               quantity: 1,
-              price: '$products.price'
+              price: '$products.price',
+              total: { $multiply: ["$products.price", "$quantity"] },
             }
           }
         ])
-        const Promisedata = await Promise.all([orderData, data, addressData]);
-        const orderData_id = Promisedata[0]._id;
-        const orderItemData = Promisedata[1].map((item) => { return { ...item, order_id: orderData_id } });
-        orderItemsModel.insertMany(orderItemData)
-        console.log('hee data', Promisedata);
 
-        res.status(200).json(orderItemData);
-      } catch (error) {
-        console.log('switch catch error',error);
+        const promiseData =await Promise.all([addressData,paymentData,cartData])
+
+        console.log('promiseData',promiseData);
+        const mainData=promiseData[2]
+        const uploadData=await mainData.map(async(item)=>{
+          return await orderModel.create({
+            user_id:user_id,
+            address_id:promiseData[0]._id,
+            payment_id:promiseData[1]._id,
+            total_amount:item.total
+          }).then(async(data)=>{
+           return await orderItemsModel.create({
+            order_id:data._id,
+            price:item.price,
+            product_id:item.product_id,
+            quantity:item.quantity
+           })
+            
+          })
+        })
+        const finaledata=await Promise.all(uploadData)
+        console.log('finale data',finaledata);
         
+      } catch (error) {
+        console.log('switch catch error', error);
+
         res.status(400).json(error)
       }
 
@@ -77,3 +109,5 @@ export const webHook = async (req: Request, res: Response) => {
       console.log(`Unhandled event type ${req.body.type}`);
   }
 }
+
+

@@ -4,7 +4,6 @@ import { orderModel } from "../models/order.model";
 
 export const getAllOrders = async(req: Request, res: Response) => {
     try {
-        console.log('hello we');
         
         const orders=await orderModel.aggregate([
             {
@@ -47,9 +46,11 @@ export const getAllOrders = async(req: Request, res: Response) => {
                     product_imagurl:"$productDetials.imagesUrl",
                     product_quantity:"$orderitems.quantity",
                     product_total:{$multiply:["$orderitems.quantity","$orderitems.price"]},
+                    demo:'my love'
 
                 }
-            }
+            },
+            {$sort:{create_at:-1}}
         ])
 
         res.status(200).json(orders)

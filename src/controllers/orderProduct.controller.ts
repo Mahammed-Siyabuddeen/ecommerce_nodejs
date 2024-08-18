@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 export const orderProduct = async (req: Request, res: Response) => {
     try {
-        const { user_id } = req.body;
+        const { user_id }:{user_id:string} = req.body;
         const orderProducts = await orderModel.aggregate([
             {
                 $match: { user_id: new mongoose.Types.ObjectId(user_id) }
@@ -27,7 +27,7 @@ export const orderProduct = async (req: Request, res: Response) => {
                     create_at:1,
                     address_id:1,
                     status:1,
-                    totalPrice:{$multiply:["$orderItems.price","$orderItems.quantity"]},
+                    totalPrice:'$total_amount',
                     quantity:"$orderItems.quantity",
                     product_id:"$orderItems.product_id",
                     orderItemId:'$orderItems._id'
