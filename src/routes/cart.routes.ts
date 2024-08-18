@@ -3,7 +3,7 @@ import addCartItem from "../controllers/addCartItem.controller";
 import { body } from "express-validator";
 import getCartProducts from "../controllers/getCartProducts.controller";
 import changeCartQuantity from "../controllers/changeCartQuantity.controller";
-import authMiddleware from "../middleware/auth.middleware";
+import { removeCartItem } from "../controllers/removeCartItem.controller";
 
 const router=Router();
 
@@ -20,5 +20,6 @@ const validationRule_changeQuantity=[
 router.post('/additem',validationRule,addCartItem);
 router.post('/getitems',validationRule_getProducts,getCartProducts)
 router.post('/changequantity',validationRule_changeQuantity,changeCartQuantity)
+router.delete('/removeitem/:cartitem_id',removeCartItem)
 
 export default router;

@@ -8,7 +8,9 @@ const addCartItem =async (req: Request, res: Response) => {
         const errors=validationResult(req);
         if(!errors.isEmpty()) throw new Error(errors.array().toString());
 
-        const {user_id,product_id,}=req.body;
+        const {user_id,product_id,size}=req.body;
+        console.log(user_id,product_id,size);
+        
         const quantity=1;
         let cart=await cartModel.findOne({user_id});
 
@@ -20,14 +22,17 @@ const addCartItem =async (req: Request, res: Response) => {
             cartItem.quantity+=1;
 
         }else{
-             cartItem=new cartItemModel({cart_id:cart?._id,product_id,quantity})
+             cartItem=new cartItemModel({cart_id:cart?._id,product_id,quantity,size:size})
         }
-        await cartItem.save();
         cart.updated_at=new Date();
-        await cart.save();
+         cartItem.save();
+         cart.save()
+        const data=await Promise.all([cart,cartItem])
+       console.log(data);
+       
         console.log('sucees');
         
-        res.status(201).json("added successfully");
+        res.status(201).json({_id:data[0]._id,cartItem_id:data[1]._id,quantity:data[1].quantity});
         
     } catch (error: unknown) {
         console.log(error);
