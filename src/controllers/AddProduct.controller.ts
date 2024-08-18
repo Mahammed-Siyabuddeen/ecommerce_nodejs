@@ -45,8 +45,15 @@ const AddProduct = async (req: Request, res: Response) => {
             brand
         })
         
-        db.save();
-        res.status(201).send("successfully created");
+        const product=await db.save();
+        res.status(201).json(
+            {
+                _id:product._id,
+                name:product.name,
+                price:product.price,
+                stock_quantity:product.stock_quantity,
+                imagesUrl:product.imagesUrl
+            });
         
     } catch (error: unknown) {
         if (error instanceof Error)

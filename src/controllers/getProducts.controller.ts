@@ -1,28 +1,40 @@
 import { Request, Response } from "express";
 import { productModel } from "../models/Product";
-import { Error } from "mongoose";
+import { Error, StringExpression } from "mongoose";
 import mongoose from "mongoose";
 
 
 export const getproducts = async (req: Request, res: Response) => {
 
     try {
-        const { name, category } = req.query;
+        const { name, category,price ,brand,rating,size} = req.query;
         console.log(req.query);
         let products;
-        if (name) {
-             products = await productModel.find({
-                $text: { $search: (name as string) }
-            }).sort({ score: { $meta: "textScore" } }).limit(10).exec()
-        }
-        else if(category){
-           products=await productModel.find({category_id:new mongoose.Types.ObjectId(category as string)})
-            .limit(10).exec();
-        }
-        return  res.status(200).json(products)
+        let query:{$text?:any,category_id?:mongoose.Types.ObjectId,price?:any,brand?:string,rating?:any,sizes?:any}={}
+
+        if (name) 
+            query.$text= {$search:(name  as string)}
+         if(category)
+            query.category_id=new mongoose.Types.ObjectId(category as string)
+        if(price)
+            query.price={ $lt: price }
+        if(brand)
+            query.brand=brand as string;
+        if(rating)
+            query.rating=rating 
+        if(size)
+            query.sizes={$in:[size]}
+        console.log(query);
+
+        products = await productModel.find(query).limit(10).exec()
+        console.log(products);
+
+        return res.status(200).json(products)
     } catch (error: unknown) {
         if (error instanceof Error)
             return res.status(400).send(error.message)
+        console.log(error);
+        
         res.status(400).send("something wrong")
     }
 }
