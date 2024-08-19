@@ -7,6 +7,9 @@ import mongoose from "mongoose";
 import { orderItemsModel } from "../models/orderItems.model";
 import { addressModel } from "../models/address.model";
 import { paymentModel } from "../models/payment.model";
+import { sendEmail } from "../utils/sendEmail.util";
+import { CustomerModel } from "../models/customers.model";
+import { sendSms } from "../utils/sendSms..util";
 
 export const webHook = async (req: Request, res: Response) => {
   console.log('webhook comming');
@@ -19,11 +22,11 @@ export const webHook = async (req: Request, res: Response) => {
       const paymentIntent = req.body.data.object;
       // console.log();
 
-      console.log('PaymentIntent was successful!',paymentIntent.metadata);
+      console.log('PaymentIntent was successful!', paymentIntent.metadata);
       // Fulfill the purchase, e.g., update the order in your database
 
       try {
-        const { user_id, cart_id,cartItem_id, name, street, city, state, country, zipcode, phone } = paymentIntent.metadata;
+        const { user_id, cart_id, cartItem_id, name, street, city, state, country, zipcode, phone } = paymentIntent.metadata;
 
         const addressData = await addressModel.create({
           name,
@@ -41,14 +44,14 @@ export const webHook = async (req: Request, res: Response) => {
           amount: paymentIntent.amount,
         })
 
-        let conditionMatch:{_id?:mongoose.Types.ObjectId,cart_id?:mongoose.Types.ObjectId}={};
-        if(cartItem_id){
-          conditionMatch._id=new mongoose.Types.ObjectId(cartItem_id)
-        }else{
-          conditionMatch.cart_id=new mongoose.Types.ObjectId(cart_id)
+        let conditionMatch: { _id?: mongoose.Types.ObjectId, cart_id?: mongoose.Types.ObjectId } = {};
+        if (cartItem_id) {
+          conditionMatch._id = new mongoose.Types.ObjectId(cartItem_id)
+        } else {
+          conditionMatch.cart_id = new mongoose.Types.ObjectId(cart_id)
 
         }
-        const cartData =await cartItemModel.aggregate([
+        const cartData = await cartItemModel.aggregate([
           {
             $match: conditionMatch,
           },
@@ -74,32 +77,38 @@ export const webHook = async (req: Request, res: Response) => {
           }
         ])
 
-        const promiseData =await Promise.all([addressData,paymentData,cartData])
+        const promiseData = await Promise.all([addressData, paymentData, cartData])
 
-        console.log('promiseData',promiseData);
-        const mainData=promiseData[2]
-        const uploadData=await mainData.map(async(item)=>{
+        console.log('promiseData', promiseData);
+        const mainData = promiseData[2]
+        const uploadData = await mainData.map(async (item) => {
           return await orderModel.create({
-            user_id:user_id,
-            address_id:promiseData[0]._id,
-            payment_id:promiseData[1]._id,
-            total_amount:item.total
-          }).then(async(data)=>{
-           return await orderItemsModel.create({
-            order_id:data._id,
-            price:item.price,
-            product_id:item.product_id,
-            quantity:item.quantity
-           })
-            
+            user_id: user_id,
+            address_id: promiseData[0]._id,
+            payment_id: promiseData[1]._id,
+            total_amount: item.total
+          }).then(async (data) => {
+            return await orderItemsModel.create({
+              order_id: data._id,
+              price: item.price,
+              product_id: item.product_id,
+              quantity: item.quantity
+            })
+
           })
         })
-        const finaledata=await Promise.all(uploadData)
-        console.log('finale data',finaledata);
-        
+        const finaledata = await Promise.all(uploadData)
+        console.log('finale data', finaledata);
+        const email: string | null = await CustomerModel.findById(user_id, { email: 1, _id: 0 })
+        if (!email) return;
+        await sendEmail({ email: (email), subject: 'Paircare Order' }).catch((err) => console.log('error in emal sending'))
+        const d = '+91' + phone.toString()
+        console.log(d);
+        sendSms({ phone: d }).then((d) => console.log(d)).catch((err) => console.log(err))
+
+
       } catch (error) {
         console.log('switch catch error', error);
-
         res.status(400).json(error)
       }
 

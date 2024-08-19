@@ -5,20 +5,18 @@ import googleSuccessAth from './routes/googleSuccessAuth'
 import product from './routes/product'
 import cart from './routes/cart.routes'
 import order from './routes/orders.router'
+import adminDashboard from './routes/dashboard.routes'
 import mongoose from 'mongoose';
-import env from 'dotenv';
+import 'dotenv/config';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary'
 import cors from 'cors'
 import { cloudinaryconfig } from './utils/cloudinaryConfig'
 import paymentRouter from './routes/payment.router'
 import wishlist from './routes/wishList'
-
-
 const port: number = 9000
 
 
-env.config()
 const app = express();
 app.use(express.json())
 app.use(cors({origin:'http://localhost:3000',credentials:true}))
@@ -44,10 +42,8 @@ app.use('/cart',cart)
 app.use('/order', order)
 app.use('/payment', paymentRouter)
 app.use('/wishlist',wishlist)
-
+app.use('/admin/dashboard',adminDashboard)
 app.post('/test', async (req: Request, res: Response) => {
- 
-
 })
 
 
