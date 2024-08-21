@@ -9,7 +9,7 @@ export const adminLogin = async (req: Request, res: Response) => {
         if (!admin) throw new Error("invalid Admin");
         const isCorrect = await bcrypt.compare(password, admin.password);
         if (!isCorrect) throw new Error('password is incorrect')
-        const token = jwt.sign({ email: email, admin_id: admin._id }, process.env.JWT_SCRECET_KEY as string, { expiresIn: '1h' })
+        const token = jwt.sign({ email: email, admin_id: admin._id }, process.env.ADMIN_JWT_SCRECET_KEY as string, { expiresIn: '1h' })
         res.status(200).json({ name: admin.name, email,token })
 
     }

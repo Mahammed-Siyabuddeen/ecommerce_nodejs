@@ -8,7 +8,7 @@ export const adminSignup = async (req: Request, res: Response) => {
         const salt = await bcrypt.genSalt(10)
         const hashpassword = await bcrypt.hash(password, salt)
         const admin = await adminModel.create({ email, name, password: hashpassword })
-        const token = jwt.sign({ email: email, admin_id: admin._id }, process.env.JWT_SCRECET_KEY as string, { expiresIn: '1h' })
+        const token = jwt.sign({ email: email, admin_id: admin._id }, process.env.ADMIN_JWT_SCRECET_KEY as string, { expiresIn: '1h' })
         res.status(200).json({ name: admin.name, email, token })
 
     }
