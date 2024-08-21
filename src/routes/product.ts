@@ -11,6 +11,7 @@ import getCategory from "../controllers/getCategory.controller";
 import getCategoryWithCount from "../controllers/getCategoryWithCount.controller";
 import { getProduct } from "../controllers/getProduct.controller";
 import { getallProductDetails } from "../controllers/getAllProuductDetails.controller";
+import { relatedProduct } from "../controllers/relatedProduct.controller";
 
 
 const router=Router()
@@ -32,6 +33,7 @@ router.post('/addcategory',addCategory)
 router.get('/getcategory',getCategory)
 router.get('/getcategorywithcount',getCategoryWithCount)
 router.get('/admin/getallproductdetails',getallProductDetails,)
+router.get('/related-product',relatedProduct)
 router.get('/getproduct/:id',getProduct)
 
 export default router

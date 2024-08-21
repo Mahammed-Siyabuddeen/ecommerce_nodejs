@@ -33,10 +33,12 @@ const orderProductById = async (req: Request, res: Response) => {
             { $match: { 'orderItem._id': new mongoose.Types.ObjectId(orderitem_id) } },
             {
                 $project: {
-                    _id: 0,
+                    create_at:1,
                     status: 1,
                     address: 1,
-                    prouduct_id: '$orderItem.product_id'
+                    prouduct_id: '$orderItem.product_id',
+                    totalPrice:{$multiply:["$orderItem.price","$orderItem.quantity"]},
+                    quantity:"$orderItem.quantity"
                 }
             },
             {
@@ -53,7 +55,10 @@ const orderProductById = async (req: Request, res: Response) => {
                 productImage:'$product.imagesUrl',
                 product_id:'$product._id',
                 address:1,
-                status:1
+                status:1,
+                create_at:1,
+                totalPrice:1,
+                quantity:1,
             }}
         ])
         res.status(200).json(orderItemData[0])
