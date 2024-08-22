@@ -7,7 +7,6 @@ import { getBanners } from "../controllers/getBanners.controller";
 
 
 const router=Router();
-const upload = multer({ dest: './public' });
 router.post('/addbanner',ProductUpload.single('file'),adminAuth,addBanner)
 router.get('/getbanners',getBanners)
 
