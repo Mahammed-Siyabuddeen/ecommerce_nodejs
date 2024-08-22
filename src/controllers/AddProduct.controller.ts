@@ -3,10 +3,10 @@ import { productModel } from "../models/Product"
 import mongoose from "mongoose"
 import multer from "multer"
 import  { CloudinaryStorage } from "multer-storage-cloudinary"
-import { v2 as cloudinary } from 'cloudinary'
+import { v2 as cloudinary, UploadApiResponse } from 'cloudinary'
 import uploadOnCloudinary from "../utils/uploadOnCloudinary"
 import { validationResult } from "express-validator"
-
+import fs from 'fs'
 
 interface Ibody {
     name: string,
@@ -26,13 +26,10 @@ const AddProduct = async (req: Request, res: Response) => {
 
     try {
         if(!req.files) throw new Error('file multer error');
-        console.log(req.body)
-        const uploadedResult=await uploadOnCloudinary(req.files)
-        console.log(uploadedResult);
-        
+        const uploadedResult=await uploadOnCloudinary(req.files as Array<any>)
+        if(Array.isArray(req.files))
+        req.files.map((file:Express.Multer.File)=>fs.unlink(file.path,()=>{})) 
         const { name, description, price, mrp, category_id, stock_quantity,sizes,brand } = req.body
-        console.log('size',JSON.parse(sizes));
-        
         const db =  new productModel({
             name,
             description,
@@ -40,7 +37,7 @@ const AddProduct = async (req: Request, res: Response) => {
             mrp:Number(mrp),
             category_id,
             stock_quantity:Number(stock_quantity),
-            imagesUrl: uploadedResult.map(file=>file.secure_url),
+            imagesUrl:( uploadedResult as UploadApiResponse[]).map(file=>file.secure_url),
             sizes:JSON.parse(sizes),
             brand
         })
