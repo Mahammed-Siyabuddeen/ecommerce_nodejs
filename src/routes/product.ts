@@ -14,6 +14,7 @@ import { getallProductDetails } from "../controllers/getAllProuductDetails.contr
 import { relatedProduct } from "../controllers/relatedProduct.controller";
 import { popularProduct } from "../controllers/popularProduct.controller";
 import { categoryByName } from "../controllers/categoryByName.controller";
+import adminAuth from "../middleware/adminAuth.middleware";
 
 
 const router=Router()
@@ -29,12 +30,12 @@ const validatorRule=[
     body("category_id").notEmpty().withMessage("product category required"),
     body("stock_quantity").isNumeric().withMessage("stock quantity required"),
 ]
-router.post('/addproduct',ProductUpload.array('file',4),AddProduct);
+router.post('/addproduct',adminAuth,ProductUpload.array('file',4),AddProduct);
 router.get('/getproducts',getproducts)
-router.post('/addcategory',addCategory)
+router.post('/addcategory',adminAuth,addCategory)
 router.get('/getcategory',getCategory)
-router.get('/getcategorywithcount',getCategoryWithCount)
-router.get('/admin/getallproductdetails',getallProductDetails,)
+router.get('/getcategorywithcount',adminAuth,getCategoryWithCount)
+router.get('/admin/getallproductdetails',adminAuth,getallProductDetails,)
 router.get('/related-product',relatedProduct)
 router.get('/popular-product',popularProduct)
 router.get('/category-id',categoryByName)

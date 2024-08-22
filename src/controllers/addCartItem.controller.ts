@@ -34,12 +34,11 @@ const addCartItem =async (req: Request, res: Response) => {
         
         res.status(201).json({_id:data[0]._id,cartItem_id:data[1]._id,quantity:data[1].quantity});
         
-    } catch (error: unknown) {
-        console.log(error);
+    }
+    catch (error: unknown) {
         if (error instanceof Error)
-            return res.status(500).json({ message: error.message });
-        res.status(500).json({ message: 'category not created' });
-
+            return res.status(400).json({ message: error.message })
+        res.status(400).json({message:"something wrong"})
     }
 }
 

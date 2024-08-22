@@ -12,12 +12,11 @@ const addCategory = async(req: Request, res: Response) => {
             
         const db =await categoryModel.create({ name })
        res.status(201).json({name:db.name,id:db._id});
-    } catch (error:unknown) {
-        console.log(error);
-        if(error instanceof Error)
-         return  res.status(500).json({message:error.message});
-          res.status(500).json({message:'category not created'});
-
+    } 
+    catch (error: unknown) {
+        if (error instanceof Error)
+            return res.status(400).json({ message: error.message })
+        res.status(400).json({message:"something wrong"})
     }
 }
 

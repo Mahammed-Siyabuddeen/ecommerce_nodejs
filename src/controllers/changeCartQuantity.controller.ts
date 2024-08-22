@@ -16,12 +16,11 @@ const changeCartQuantity = async (req: Request, res: Response) => {
         cartItem.save();
         res.status(201).json("succesfful qauntity updated");
 
-    } catch (error: unknown) {
-        console.log(error);
+    } 
+    catch (error: unknown) {
         if (error instanceof Error)
-            return res.status(500).json({ message: error.message });
-        res.status(500).json({ message: 'category not created' });
-
+            return res.status(400).json({ message: error.message })
+        res.status(400).json({message:"something wrong"})
     }
 }
 

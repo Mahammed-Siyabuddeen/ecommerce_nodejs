@@ -8,6 +8,7 @@ import order from './routes/orders.router'
 import adminDashboard from './routes/dashboard.routes'
 import authRouter from './routes/auth.routers'
 import ratingRouter from './routes/rating.routes'
+import bannerRouter from './routes/banner.routes'
 import mongoose from 'mongoose';
 import 'dotenv/config';
 import multer from 'multer';
@@ -47,6 +48,7 @@ app.use('/payment', paymentRouter)
 app.use('/wishlist',wishlist)
 app.use('/admin/dashboard',adminDashboard)
 app.use('/rating',ratingRouter)
+app.use('/banner',bannerRouter)
 app.post('/test', async (req: Request, res: Response) => {
 })
 

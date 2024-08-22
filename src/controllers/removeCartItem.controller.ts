@@ -8,9 +8,10 @@ export const removeCartItem= async (req: Request, res: Response) => {
         const {cartitem_id}=req.params;
        await cartItemModel.findByIdAndDelete(cartitem_id);
         res.status(204).json({message:'succeesfully removed'});
-    } catch (error: unknown) {
+    } 
+    catch (error: unknown) {
         if (error instanceof Error)
-            return res.status(400).send(error.message)
-        res.status(400).send("something wrong")
+            return res.status(400).json({ message: error.message })
+        res.status(400).json({message:"something wrong"})
     }
 }

@@ -14,7 +14,7 @@ export const adminSignup = async (req: Request, res: Response) => {
     }
     catch (error: unknown) {
         if (error instanceof Error)
-            return res.status(400).send(error.message)
-        res.status(400).send("something wrong")
+            return res.status(400).json({ message: error.message })
+        res.status(400).json({message:"something wrong"})
     }
 }

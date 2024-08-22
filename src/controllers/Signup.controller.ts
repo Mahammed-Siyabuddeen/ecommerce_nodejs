@@ -36,12 +36,10 @@ export const Signup = async (req: Request, res: Response) => {
             
         res.status(201).cookie('token',token,{ httpOnly: true }).json({ _id: doc._id, first_name, last_name, phone_number, email, token })
 
-    } catch (error: unknown) {
+    } 
+    catch (error: unknown) {
         if (error instanceof Error)
-            return res.status(400).json(error.message)
-        res.status(400).json(error)
-
-
+            return res.status(400).json({ message: error.message })
+        res.status(400).json({message:"something wrong"})
     }
-
 }

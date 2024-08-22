@@ -11,7 +11,7 @@ export interface customerRequest extends Request {
     user?: authMiddlewareType
 }
 const client = new OAuth2Client();
-const authMiddleware = async (req: customerRequest, res: Response, next: NextFunction) => {
+const userAuth = async (req: customerRequest, res: Response, next: NextFunction) => {
     try {
         const data = req.header('Authorization');
         if (!data) throw new Error('please login')
@@ -37,4 +37,4 @@ const authMiddleware = async (req: customerRequest, res: Response, next: NextFun
     }
 }
 
-export default authMiddleware
+export default userAuth

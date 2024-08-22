@@ -28,9 +28,10 @@ export const getClientSecret = async (req: Request, res: Response) => {
         console.log('get client id successfully');
 
         res.status(201).json({ clientSecret: paymentIntents.client_secret })
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ message: error })
-
+    }
+    catch (error: unknown) {
+        if (error instanceof Error)
+            return res.status(400).json({ message: error.message })
+        res.status(400).json({message:"something wrong"})
     }
 }

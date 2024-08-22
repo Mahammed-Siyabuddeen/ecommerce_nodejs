@@ -31,6 +31,6 @@ export const totalOrderByCity = async (req: Request, res: Response) => {
     catch (error: unknown) {
         if (error instanceof Error)
             return res.status(400).json({ message: error.message })
-        res.status(400).send("something wrong")
+        res.status(400).json({message:"something wrong"})
     }
 }  

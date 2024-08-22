@@ -26,12 +26,12 @@ const SignIn = async (req: Request, res: Response) => {
         const token = jwt.sign({ email, user_id: user._id }, process.env.JWT_SCRECET_KEY as string, { expiresIn: '1hr' })
         res.status(200).cookie('token',token,{ httpOnly: true }).json({ _id: user._id, first_name: user.first_name, email: user.email, password: null, token })
 
-    } catch (error: unknown) {
+    } 
+    catch (error: unknown) {
         if (error instanceof Error)
-            return res.status(400).json({message:error.message})
-        res.status(400).json({message:'please try again'})
+            return res.status(400).json({ message: error.message })
+        res.status(400).json({message:"something wrong"})
     }
-
 }
 
 export default SignIn

@@ -24,12 +24,11 @@ const getCategoryWithCount = async (req: Request, res: Response) => {
         ])
 
         res.status(200).json(db)
-
-    } catch (error: unknown) {
+    }
+    catch (error: unknown) {
         if (error instanceof Error)
-            res.status(401).send({ error: error.message })
-
-        console.log(error);
+            return res.status(400).json({ message: error.message })
+        res.status(400).json({ message: "something wrong" })
     }
 }
 

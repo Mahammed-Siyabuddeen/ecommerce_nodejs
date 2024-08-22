@@ -55,12 +55,11 @@ const getCartProducts = async(req: Request, res: Response) => {
         console.log(products);
         res.status(200).json(products)
         
-    } catch (error: unknown) {
-        console.log(error);
+    } 
+    catch (error: unknown) {
         if (error instanceof Error)
-            return res.status(500).json({ message: error.message });
-        res.status(500).json({ message: 'category not created' });
-
+            return res.status(400).json({ message: error.message })
+        res.status(400).json({message:"something wrong"})
     }
 }
 
