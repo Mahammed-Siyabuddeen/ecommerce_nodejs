@@ -12,5 +12,4 @@ const validatorRule = [
 ]
 
 router.post('/', validatorRule, Signup)
-
 export default router
