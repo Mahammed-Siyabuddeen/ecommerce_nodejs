@@ -7,8 +7,8 @@ import userAuth from "../middleware/auth.middleware";
 const router=Router();
 
 
-router.get('/reviews/:product_id',userAuth,getReviews)
-router.get('/totalrating/:product_id',userAuth,totalRating)
+router.get('/reviews/:product_id',getReviews)
+router.get('/totalrating/:product_id',totalRating)
 router.post('/addproductreview',userAuth,addProductReview);
 
 export default router;
