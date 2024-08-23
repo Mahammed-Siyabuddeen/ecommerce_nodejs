@@ -10,7 +10,13 @@ export const getproducts = async (req: Request, res: Response) => {
         const { name, category,price ,brand,rating,size} = req.query;
         console.log(req.query);
         let products;
-        let query:{$text?:any,category_id?:mongoose.Types.ObjectId,price?:any,brand?:string,rating?:any,sizes?:any}={}
+        let query:{
+            $text?:any,
+            category_id?:mongoose.Types.ObjectId,
+            price?:any,brand?:string,
+            'ratings.average'?:any,
+            sizes?:any
+        }={}
 
         if (name) 
             query.$text= {$search:(name  as string)}
@@ -21,7 +27,7 @@ export const getproducts = async (req: Request, res: Response) => {
         if(brand)
             query.brand=brand as string;
         if(rating)
-            query.rating=rating 
+            query["ratings.average"]=rating 
         if(size)
             query.sizes={$in:[size]}
         console.log(query);
