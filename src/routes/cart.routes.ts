@@ -5,6 +5,7 @@ import getCartProducts from "../controllers/getCartProducts.controller";
 import changeCartQuantity from "../controllers/changeCartQuantity.controller";
 import { removeCartItem } from "../controllers/removeCartItem.controller";
 import userAuth from "../middleware/auth.middleware";
+import { getCartCount } from "../controllers/getCartCount.controller";
 
 const router=Router();
 
@@ -21,6 +22,7 @@ const validationRule_changeQuantity=[
 router.post('/additem',userAuth,validationRule,addCartItem);
 router.post('/getitems',userAuth,validationRule_getProducts,getCartProducts)
 router.post('/changequantity',userAuth,validationRule_changeQuantity,changeCartQuantity)
+router.post('/cartcount',userAuth,getCartCount)
 router.delete('/removeitem/:cartitem_id',userAuth,removeCartItem)
 
 export default router;
