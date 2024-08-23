@@ -47,7 +47,8 @@ const getCartProducts = async(req: Request, res: Response) => {
                     price:"$products.price",
                     brand:"$products.brand",
                     imagesUrl:"$products.imagesUrl",
-                    total:{$multiply:["$products.price","$items.quantity"]}
+                    total:{$multiply:["$products.price","$items.quantity"]},
+                    stock_quantity:"$products.stock_quantity",
 
                 }
             }
