@@ -17,12 +17,12 @@ import cors from 'cors'
 import { cloudinaryconfig } from './utils/cloudinaryConfig'
 import paymentRouter from './routes/payment.router'
 import wishlist from './routes/wishList'
-const port: number = 9000
+const port: number = JSON.parse(process.env.PORT as string)|| 9000
 
 
 const app = express();
 app.use(express.json())
-app.use(cors({origin:'http://localhost:3000',credentials:true}))
+app.use(cors({origin:process.env.CLIENT_URL,credentials:true}))
 cloudinaryconfig
 
 cloudinary.api.ping((error, result) => {
@@ -69,7 +69,7 @@ const upload = multer({ storage });
 
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/ecommerce').then(() => {
+mongoose.connect(process.env.DATABASE_URL as string).then(() => {
   console.log('mongodb connected');
 
 }).catch((err) => {
