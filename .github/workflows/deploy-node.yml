@@ -20,7 +20,7 @@ jobs:
 
     - name: Copy files via SSH
       run: |
-        rsync -avz --delete . root@134.209.121.246/var/www/backend
+        rsync -avz --delete . root@134.209.121.246:/var/www/backend
       env:
         SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
 
