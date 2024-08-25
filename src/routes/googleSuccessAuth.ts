@@ -27,10 +27,10 @@ router.post('/', async (req: Request, res: Response) => {
                 email,
                 auth_type: 'google'
             })
-            return res.status(201).cookie('token',payload,{ httpOnly: true }).json({_id:db._id,first_name:name,last_name:family_name || given_name,email,token:credential})
+            return res.status(201).json({_id:db._id,first_name:name,last_name:family_name || given_name,email,token:credential})
         }
         
-        return res.status(201).cookie('token',payload,{ httpOnly: true }).json({_id:customerAlreadyExsist[0]._id,first_name:name,last_name:family_name || given_name,email,token:credential})
+        return res.status(201).json({_id:customerAlreadyExsist[0]._id,first_name:name,last_name:family_name || given_name,email,token:credential})
 
 
     } catch (error) {

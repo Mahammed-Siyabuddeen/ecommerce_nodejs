@@ -13,6 +13,6 @@ router.post('/forget-password',forgetPassword)
 router.post('/reset-password/:token',resetPassword)
 router.post('/admin/login',adminLogin)
 router.get('/customers',adminAuth,getCustomers)
-// router.post('/admin/signup',adminSignup)
+router.post('/admin/signup',adminSignup)
 
 export default router

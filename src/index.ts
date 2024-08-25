@@ -35,7 +35,7 @@ cloudinary.api.ping((error, result) => {
 
 app.get('/', (req: Request, res: Response) => {
   console.log(process.env.API_KEY);
-  res.send("hello");
+  res.send(`server is Running go to ${process.env.CLIENT_URL}`);
 })
 app.use('/signup', signup)
 app.use('/login', login)

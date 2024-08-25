@@ -34,7 +34,7 @@ export const Signup = async (req: Request, res: Response) => {
         })
         const token = jwt.sign({ email: doc.email, user_id: doc._id }, 'shihab', { expiresIn: '1h' })
             
-        res.status(201).cookie('token',token,{ httpOnly: true }).json({ _id: doc._id, first_name, last_name, phone_number, email, token })
+        res.status(201).json({ _id: doc._id, first_name, last_name, phone_number, email, token })
 
     } 
     catch (error: unknown) {
