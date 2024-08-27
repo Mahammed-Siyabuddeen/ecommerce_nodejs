@@ -18,5 +18,5 @@ const customerSchema = new mongoose.Schema<ICustomer>({
     phone_number: { type: [String] },
 })
 
-export const CustomerModel = mongoose.model("customers1", customerSchema);
+export const CustomerModel = mongoose.model("customers", customerSchema);
 
