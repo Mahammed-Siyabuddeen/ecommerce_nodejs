@@ -4,7 +4,7 @@ import Stripe from "stripe";
 export const getClientSecret = async (req: Request, res: Response) => {
     try {
        
-        const stripe = new Stripe('sk_test_51PlwiKGBMIgRPdYIW7uCxvuoPgPv8hDDe6fRr4s3d95Sj3AzQglp6MU7UPXcYwTcwztlsQ42JuVrT395neBKpMa500pciZTsna')
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
         const { amount, cart_id,cartItem_id, user_id,name, street,city,zipcode,state,country,phone } = req.body;
         console.log(req.body);
         const paymentIntents = await stripe.paymentIntents.create({

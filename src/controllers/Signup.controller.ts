@@ -19,7 +19,7 @@ export const Signup = async (req: Request, res: Response) => {
     try {
         const { first_name, last_name, phone_number, email, password }: BodyData = req.body
         const customerAlreadyExsist = await CustomerModel.find({ email })
-        if (customerAlreadyExsist.length) return res.status(400).send("user already exists with this email");
+        if (customerAlreadyExsist.length) return res.status(400).json({message:"user already exists with this email"});
 
         const salt = await bcrypt.genSalt(10)
         const hash = await bcrypt.hash(password, salt)
