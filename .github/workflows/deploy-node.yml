@@ -25,11 +25,7 @@ jobs:
 
     - name: Copy files via SSH
       run: |
-        rsync -avz --delete . root@134.209.121.246:/var/www/backend
-
-    - name: Restart PM2
-      run: ssh -o StrictHostKeyChecking=no root@134.209.121.246 'pm2 restart api'
-        rsync -avz --exclude='node_modules' --exclude='.env' --delete . root@134.209.121.246:/var/www/backend
+        rsync -avz --exclude='node_modules' --exclude='.env' --exclude='public' --delete . root@134.209.121.246:/var/www/backend
 
     - name: npm install and Restart PM2 
       run: ssh -o StrictHostKeyChecking=no root@134.209.121.246 'npm install && pm2 restart backend'
