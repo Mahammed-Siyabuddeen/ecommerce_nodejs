@@ -4,9 +4,9 @@
   "description": "this is ecommerce backend ",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "dev": "ts-node src/index.ts",
     "build": "tsc",
-    "serve": "node dis/index.js",
+    "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "mahammed-siyabuddeen",
