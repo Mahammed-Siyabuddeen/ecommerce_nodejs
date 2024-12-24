@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { Request, Response } from "express";
 import Stripe from "stripe";
 import { orderModel } from "../models/order.model";
 import { cartItemModel } from "../models/cartItem.model";
@@ -12,15 +12,12 @@ import { CustomerModel } from "../models/customers.model";
 import { sendSms } from "../utils/sendSms..util";
 
 export const webHook = async (req: Request, res: Response) => {
-  console.log('webhook comming');
-  const endpointSecrect = 'whsec_47e85aae365be541f520655b2865b40664942b8df4d2eca90a86522c94ba1047'
   const sig = req.headers['stripe-signature'] as string | undefined
   let event: Stripe.Event;
 
   switch (req.body.type) {
     case 'payment_intent.succeeded':
       const paymentIntent = req.body.data.object;
-      // console.log();
 
       console.log('PaymentIntent was successful!', paymentIntent.metadata);
       // Fulfill the purchase, e.g., update the order in your database
@@ -83,7 +80,6 @@ export const webHook = async (req: Request, res: Response) => {
 
         const promiseData = await Promise.all([addressData, paymentData, cartData])
 
-        console.log('promiseData', promiseData);
         const mainData = promiseData[2]
 
         // insert arrayof orders and orderitem

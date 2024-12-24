@@ -44,7 +44,12 @@ export const orderProduct = async (req: Request, res: Response) => {
             {$unwind:'$products'},
             {
                 $project:{
-                    _id:1,created_at:1,status:1,totalPrice:1,quantity:1,product_id:1,address_id:1,orderItemId:1,
+                    _id:1,create_at:1,
+                    status:1,
+                    totalPrice:1,
+                    quantity:1,product_id:1,
+                    address_id:1,
+                    orderItemId:1,
                     productName:'$products.name',
                     productImage:'$products.imagesUrl'
                 }
@@ -58,8 +63,8 @@ export const orderProduct = async (req: Request, res: Response) => {
                 }
             },
             {$unwind:'$address'},
-        ])
-        console.log(orderProducts,user_id);
+        ]).sort({"create_at":-1})
+        console.log(orderProducts);
         
         res.status(200).json(orderProducts)
     }

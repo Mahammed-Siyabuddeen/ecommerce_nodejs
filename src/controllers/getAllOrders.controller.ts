@@ -8,7 +8,7 @@ export const getAllOrders = async(req: Request, res: Response) => {
         const orders=await orderModel.aggregate([
             {
                 $lookup:{
-                    from:'customers1',
+                    from:'customers',
                     localField:'user_id',
                     foreignField:'_id',
                     as:'userdetails'
@@ -46,8 +46,6 @@ export const getAllOrders = async(req: Request, res: Response) => {
                     product_imagurl:"$productDetials.imagesUrl",
                     product_quantity:"$orderitems.quantity",
                     product_total:{$multiply:["$orderitems.quantity","$orderitems.price"]},
-                    demo:'my love'
-
                 }
             },
             {$sort:{create_at:-1}}
