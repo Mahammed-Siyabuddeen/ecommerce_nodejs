@@ -16,7 +16,7 @@ const getAllOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const orders = yield order_model_1.orderModel.aggregate([
             {
                 $lookup: {
-                    from: 'customers1',
+                    from: 'customers',
                     localField: 'user_id',
                     foreignField: '_id',
                     as: 'userdetails'
@@ -54,7 +54,6 @@ const getAllOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                     product_imagurl: "$productDetials.imagesUrl",
                     product_quantity: "$orderitems.quantity",
                     product_total: { $multiply: ["$orderitems.quantity", "$orderitems.price"] },
-                    demo: 'my love'
                 }
             },
             { $sort: { create_at: -1 } }

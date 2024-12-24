@@ -24,14 +24,11 @@ const sendEmail_util_1 = require("../utils/sendEmail.util");
 const customers_model_1 = require("../models/customers.model");
 const sendSms__util_1 = require("../utils/sendSms..util");
 const webHook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('webhook comming');
-    const endpointSecrect = 'whsec_47e85aae365be541f520655b2865b40664942b8df4d2eca90a86522c94ba1047';
     const sig = req.headers['stripe-signature'];
     let event;
     switch (req.body.type) {
         case 'payment_intent.succeeded':
             const paymentIntent = req.body.data.object;
-            // console.log();
             console.log('PaymentIntent was successful!', paymentIntent.metadata);
             // Fulfill the purchase, e.g., update the order in your database
             try {
@@ -86,7 +83,6 @@ const webHook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                     }
                 ]);
                 const promiseData = yield Promise.all([addressData, paymentData, cartData]);
-                console.log('promiseData', promiseData);
                 const mainData = promiseData[2];
                 // insert arrayof orders and orderitem
                 const uploadData = mainData.map((item) => __awaiter(void 0, void 0, void 0, function* () {
